@@ -48,3 +48,32 @@ export_graphviz(
 )
 graph = pydot.graph_from_dot_data(dot_data.getvalue())
 Image(graph[0].create_png())
+
+# Random forests
+from sklearn.ensemble import RandomForestClassifier
+
+rfc = RandomForestClassifier(n_estimators=200)
+rfc.fit(X_train, y_train)
+
+y_rfc_pred = rfc.predict(X_test)
+
+# Evaluate
+def print_cm(pred_cm):
+    pred_false, pred_true = pred_cm
+    tn, fn = pred_false
+    fp, tp = pred_true
+    print(
+        f'TN\tFN\tFP\tTP\n{tn}\t{fn}\t{fp}\t{tp}'
+    )
+
+dtree_cm = confusion_matrix(y_test, y_pred)
+print_cm(dtree_cm)
+
+rfc_cm = confusion_matrix(y_test, y_rfc_pred)
+print_cm(rfc_cm)
+
+dtree_cr = classification_report(y_test, y_pred)
+rfc_cr = classification_report(y_test, y_rfc_pred)
+
+print(dtree_cr)
+print(rfc_cr)
